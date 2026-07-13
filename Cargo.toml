@@ -1,0 +1,20 @@
+[package]
+name = "envolve"
+version = "0.1.0"
+edition = "2021"
+description = "Env schema validator and .env.example generator"
+license = "MIT"
+repository = "https://github.com/mb4ndeira/envolve"
+keywords = ["env", "environment", "validation", "dotenv", "cli"]
+categories = ["command-line-utilities", "development-tools"]
+
+[[bin]]
+name = "envolve"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+colored = "2"
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
