@@ -14,25 +14,25 @@ jobs:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            artifact: envolve_linux_amd64_v1
+            artifact: envow_linux_amd64_v1
             ext: ""
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
-            artifact: envolve_linux_arm64
+            artifact: envow_linux_arm64
             ext: ""
             cross: true
           - os: ubuntu-latest
             target: x86_64-pc-windows-gnu
-            artifact: envolve_windows_amd64_v1
+            artifact: envow_windows_amd64_v1
             ext: ".exe"
             mingw: true
           - os: macos-latest
             target: x86_64-apple-darwin
-            artifact: envolve_darwin_amd64
+            artifact: envow_darwin_amd64
             ext: ""
           - os: macos-latest
             target: aarch64-apple-darwin
-            artifact: envolve_darwin_arm64
+            artifact: envow_darwin_arm64
             ext: ""
 
     runs-on: ${{ matrix.os }}
@@ -65,7 +65,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist/${{ matrix.artifact }}
-          cp target/${{ matrix.target }}/release/envolve${{ matrix.ext }} \
+          cp target/${{ matrix.target }}/release/envow${{ matrix.ext }} \
              dist/${{ matrix.artifact }}/
 
       - uses: actions/upload-artifact@v4

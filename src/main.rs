@@ -6,7 +6,7 @@ mod schema;
 mod validate;
 
 #[derive(Parser)]
-#[command(name = "envolve", version, about = "Env schema validator and generator")]
+#[command(name = "envow", version, about = "Env schema validator and generator")]
 struct Cli {
     #[command(subcommand)]
     command: Commands,

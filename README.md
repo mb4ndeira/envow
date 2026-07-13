@@ -1,4 +1,4 @@
-# envolve
+# envow
 
 Env schema validator and `.env.example` generator. Define your env contract once in a TOML file, validate against it and generate templates from it.
 
@@ -6,29 +6,29 @@ Env schema validator and `.env.example` generator. Define your env contract once
 
 **macOS**
 ```sh
-brew tap mb4ndeira/homebrew-tap && brew install envolve
+brew tap mb4ndeira/homebrew-tap && brew install envow
 ```
 
 **Windows**
 ```sh
-winget install mb4ndeira.envolve
+winget install mb4ndeira.envow
 ```
 
-**Linux** — download `.deb` or `.rpm` from [releases](https://github.com/mb4ndeira/envolve/releases).
+**Linux** — download `.deb` or `.rpm` from [releases](https://github.com/mb4ndeira/envow/releases).
 
 **From source**
 ```sh
-cargo install --git https://github.com/mb4ndeira/envolve
+cargo install --git https://github.com/mb4ndeira/envow
 ```
 
 ## Usage
 
 ```sh
-envolve validate [schema]   # validate current environment against schema
-envolve generate [schema]   # generate .env.example from schema
+envow validate [schema]   # validate current environment against schema
+envow generate [schema]   # generate .env.example from schema
 ```
 
-`schema` defaults to `envolve.toml` in the current directory.
+`schema` defaults to `envow.toml` in the current directory.
 
 | Command | Flag | Default | Effect |
 |---|---|---|---|
@@ -79,11 +79,11 @@ Sections are arbitrary — name them whatever makes sense for your project. Each
 
 ## Generation
 
-`envolve generate` writes a `.env.example` from your schema. Required vars are uncommented with the example as a placeholder; optional vars are commented out showing the default.
+`envow generate` writes a `.env.example` from your schema. Required vars are uncommented with the example as a placeholder; optional vars are commented out showing the default.
 
 ```sh
-envolve generate                          # → .env.example
-envolve generate envolve.toml -o .env.template
+envow generate                          # → .env.example
+envow generate envow.toml -o .env.template
 ```
 
 Output:

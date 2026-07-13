@@ -1,10 +1,10 @@
-class Envolve < Formula
+class Envow < Formula
   desc "Env schema validator and .env.example generator"
-  homepage "https://github.com/mb4ndeira/envolve"
-  url "https://github.com/mb4ndeira/envolve/archive/refs/tags/v0.1.0.tar.gz"
+  homepage "https://github.com/mb4ndeira/envow"
+  url "https://github.com/mb4ndeira/envow/archive/refs/tags/v0.1.0.tar.gz"
   sha256 "" # update after release: curl -sL <url> | shasum -a 256
   license "MIT"
-  head "https://github.com/mb4ndeira/envolve.git", branch: "main"
+  head "https://github.com/mb4ndeira/envow.git", branch: "main"
 
   depends_on "rust" => :build
 
@@ -13,6 +13,6 @@ class Envolve < Formula
   end
 
   test do
-    system "#{bin}/envolve", "--version"
+    system "#{bin}/envow", "--version"
   end
 end

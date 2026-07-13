@@ -30,15 +30,15 @@ brews:
       name: Matheus Bandeira
       email: matheus.bandeira@inovahu.com
     directory: Formula
-    homepage: https://github.com/mb4ndeira/envolve
+    homepage: https://github.com/mb4ndeira/envow
     description: Env schema validator and .env.example generator
     license: MIT
-    install: bin.install "envolve"
-    test: system "#{bin}/envolve", "--version"
+    install: bin.install "envow"
+    test: system "#{bin}/envow", "--version"
 
 nfpms:
-  - package_name: envolve
-    homepage: https://github.com/mb4ndeira/envolve
+  - package_name: envow
+    homepage: https://github.com/mb4ndeira/envow
     description: Env schema validator and .env.example generator
     license: MIT
     formats:
@@ -49,4 +49,4 @@ nfpms:
 release:
   github:
     owner: mb4ndeira
-    name: envolve
+    name: envow
