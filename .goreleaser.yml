@@ -1,11 +1,11 @@
 version: 2
 
 builds:
-  - id: envolve
+  - id: envow
     builder: rust
     targets:
-      - x86_64-unknown-linux-gnu
-      - aarch64-unknown-linux-gnu
+      - x86_64-unknown-linux-musl
+      - aarch64-unknown-linux-musl
       - x86_64-apple-darwin
       - aarch64-apple-darwin
       - x86_64-pc-windows-gnu
@@ -15,7 +15,7 @@ archives:
     format_overrides:
       - goos: windows
         formats: [zip]
-    name_template: "envolve_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    name_template: "envow_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     files:
       - LICENSE
 
