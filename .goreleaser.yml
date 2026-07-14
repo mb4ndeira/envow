@@ -26,6 +26,7 @@ brews:
   - repository:
       owner: mb4ndeira
       name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     commit_author:
       name: Matheus Bandeira
       email: matheus.bandeira@inovahu.com
