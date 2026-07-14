@@ -6,7 +6,9 @@ Env schema validator and `.env.example` generator. Define your env contract once
 
 **macOS**
 ```sh
-brew tap mb4ndeira/homebrew-tap && brew install envow
+brew tap mb4ndeira/homebrew-tap
+brew trust mb4ndeira/tap   # required once for third-party taps
+brew install envow
 ```
 
 **Windows**
