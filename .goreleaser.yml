@@ -22,7 +22,7 @@ archives:
 checksum:
   name_template: checksums.txt
 
-brews:
+homebrew:
   - repository:
       owner: mb4ndeira
       name: homebrew-tap
@@ -40,6 +40,7 @@ nfpms:
   - package_name: envow
     homepage: https://github.com/mb4ndeira/envow
     description: Env schema validator and .env.example generator
+    maintainer: Matheus Bandeira <matheus.bandeira@inovahu.com>
     license: MIT
     formats:
       - deb
