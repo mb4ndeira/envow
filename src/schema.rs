@@ -12,11 +12,22 @@ pub struct VarSpec {
     pub min_length: Option<usize>,
     pub max_length: Option<usize>,
     pub choices: Option<Vec<String>>,
+    pub env: Option<String>,
+    pub values: Option<HashMap<String, String>>,
+    pub generate: Option<String>,
 }
 
 impl VarSpec {
     pub fn is_required(&self) -> bool {
         self.required.unwrap_or(false) && self.default.is_none()
+    }
+
+    pub fn applies_to_env(&self, cli_env: Option<&str>) -> bool {
+        match (&self.env, cli_env) {
+            (None, _) => true,
+            (Some(_), None) => false,
+            (Some(var_env), Some(cli)) => var_env == cli,
+        }
     }
 }
 

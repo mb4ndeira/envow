@@ -1,15 +1,22 @@
 use std::path::Path;
 use colored::Colorize;
 use crate::schema::{self, VarSpec};
+use crate::Format;
+
+pub enum Error {
+    Schema(anyhow::Error),
+    Failures,
+}
 
 struct Failure {
+    section: String,
     key: String,
     msg: String,
     spec: VarSpec,
 }
 
-pub fn run(schema_path: &Path, only: &[String]) -> anyhow::Result<()> {
-    let schema = schema::load(schema_path)?;
+pub fn run(schema_path: &Path, only: &[String], cli_env: Option<&str>, format: &Format) -> Result<(), Error> {
+    let schema = schema::load(schema_path).map_err(Error::Schema)?;
     let mut failures: Vec<Failure> = Vec::new();
 
     let mut sections: Vec<(&String, &schema::Section)> = schema.iter().collect();
@@ -23,38 +30,60 @@ pub fn run(schema_path: &Path, only: &[String]) -> anyhow::Result<()> {
         keys.sort();
         for key in keys {
             let spec = &vars[key];
+            if !spec.applies_to_env(cli_env) {
+                continue;
+            }
             let value = std::env::var(key).ok();
             if let Err(msg) = check(spec, value.as_deref()) {
-                failures.push(Failure { key: key.clone(), msg, spec: spec.clone() });
+                failures.push(Failure { section: section.to_string(), key: key.clone(), msg, spec: spec.clone() });
             }
         }
     }
 
     if failures.is_empty() {
-        println!("{}", "✓ all env vars valid".green());
+        match format {
+            Format::Plain => println!("{}", "✓ all env vars valid".green()),
+            Format::Json => println!("{}", serde_json::json!({ "ok": true, "failures": [] })),
+        }
         return Ok(());
     }
 
-    let n = failures.len();
-    eprintln!(
-        "\n{}\n",
-        format!("✗ {n} env var{} missing or invalid:", if n == 1 { "" } else { "s" })
-            .red()
-            .bold()
-    );
-
-    for f in &failures {
-        eprintln!("  {}  {}", f.key.yellow().bold(), f.msg.red());
-        if let Some(desc) = &f.spec.description {
-            eprintln!("    → {}", desc.dimmed());
+    match format {
+        Format::Json => {
+            let payload = serde_json::json!({
+                "ok": false,
+                "failures": failures.iter().map(|f| serde_json::json!({
+                    "section": f.section,
+                    "key": f.key,
+                    "message": f.msg,
+                    "description": f.spec.description,
+                    "example": f.spec.example,
+                })).collect::<Vec<_>>()
+            });
+            println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         }
-        if let Some(ex) = &f.spec.example {
-            eprintln!("    example: {}", ex.dimmed());
+        Format::Plain => {
+            let n = failures.len();
+            eprintln!(
+                "\n{}\n",
+                format!("✗ {n} env var{} missing or invalid:", if n == 1 { "" } else { "s" })
+                    .red()
+                    .bold()
+            );
+            for f in &failures {
+                eprintln!("  {}  {}", f.key.yellow().bold(), f.msg.red());
+                if let Some(desc) = &f.spec.description {
+                    eprintln!("    → {}", desc.dimmed());
+                }
+                if let Some(ex) = &f.spec.example {
+                    eprintln!("    example: {}", ex.dimmed());
+                }
+                eprintln!();
+            }
         }
-        eprintln!();
     }
 
-    std::process::exit(1);
+    Err(Error::Failures)
 }
 
 fn check(spec: &VarSpec, value: Option<&str>) -> Result<(), String> {

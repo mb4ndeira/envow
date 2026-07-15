@@ -35,9 +35,12 @@ envow generate [schema]   # generate .env.example from schema
 | Command | Flag | Default | Effect |
 |---|---|---|---|
 | `validate` | `--only a,b` | all sections | validate only the listed sections |
+| `validate` | `--env <name>` | — | include env-scoped vars matching `<name>` |
+| `validate` | `--format plain\|json` | `plain` | output format |
 | `generate` | `-o, --output` | `.env.example` | output file path |
+| `generate` | `--env <name>` | — | include env-scoped vars and prefer `values[<name>]` placeholders |
 
-Exit code `0` on success, `1` on any failure.
+Exit codes: `0` success, `1` validation failures, `2` schema error (file not found / parse error).
 
 ## Schema
 
@@ -66,6 +69,9 @@ Sections are arbitrary — name them whatever makes sense for your project. Each
 | `min_length` | Minimum character count (`string`) |
 | `max_length` | Maximum character count (`string`) |
 | `choices` | Restrict to a set of allowed values (`string`) |
+| `env` | Scope this var to a named environment — skipped unless `--env` matches |
+| `values` | Map of env-name → placeholder used by `generate --env` |
+| `generate` | Generate a fresh secret value in `generate` output (`hex32`, `hex64`, `base64_32`, `uuid`) |
 
 ### Types
 
@@ -86,24 +92,25 @@ Sections are arbitrary — name them whatever makes sense for your project. Each
 ```sh
 envow generate                          # → .env.example
 envow generate envow.toml -o .env.template
+envow generate --env dev                # selects dev values, includes dev-scoped vars
 ```
 
-Output:
+### Environment scoping
 
-```sh
-# ── database ─────────────────────────────────────────────────────────────────
+Vars with `env = "dev"` are invisible unless `--env dev` is passed to both `validate` and `generate`. Use `values` for env-specific placeholder overrides:
 
-# Primary database [required, type:url]
-DATABASE_URL=postgres://user:pass@localhost:5432/db
+```toml
+[runtime]
+LOG_LEVEL = { required = true, example = "info", values = { dev = "debug", prod = "warn" } }
+DEBUG_MODE = { env = "dev", required = true, example = "true" }
+```
 
-# Max connections [default:10]
-# DB_POOL_SIZE=10
+### Secret generation
 
-# ── auth ─────────────────────────────────────────────────────────────────────
+When `generate = "hex32"` (or `hex64`, `base64_32`, `uuid`) is set, `envow generate` emits a freshly generated value — safe to paste into `.env` directly. `validate` is unaffected.
 
-# JWT signing secret [required, min_length:32]
-JWT_SECRET=a-secret-at-least-32-chars
-
-# Log verbosity [default:info, choices:debug|info|warn|error]
-# LOG_LEVEL=info
+```toml
+[auth]
+SESSION_SECRET = { required = true, generate = "hex32" }
+JWT_SECRET     = { required = true, generate = "base64_32" }
 ```
